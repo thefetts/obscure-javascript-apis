@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <button id="start">Tap to start the request!</button>
+        <button id="abort">Abort! Abort!</button><br/>
+        Request status: <span id="status">idle</span>
+
+        <script>
+            const abortController = new AbortController()
+            const signal = abortController.signal
+
+            window.onload = () => {
+                document.querySelector('#start').addEventListener('click', beginFetch)
+                document.querySelector('#abort').addEventListener('click', abort)
+            }
+
+            function beginFetch() {
+                updateStatus('beginning fetch...')
+                fetch('http://localhost:3000/never-gonna-give-you-a-response', {signal})
+                    .then(response => updateStatus(`got response: ${response}`))
+                    .catch(error => updateStatus(`got error: ${error}`))
+            }
+
+            function abort() {
+                abortController.abort()
+            }
+
+            function updateStatus(status) {
+                const el = document.querySelector("#status")
+                el.innerHTML = `${el.innerHTML}<br/>${status}`
+            }
+        </script>
+    </body>
+</html>
